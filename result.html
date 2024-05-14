@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Model Prediction</title>
+</head>
+<body>
+    <h1>Model Prediction</h1>
+    <form id="prediction-form">
+        <label for="model">Choose a model:</label>
+        <select name="model" id="model">
+            <option value="ca">CA Model</option>
+            <option value="hb">HB Model</option>
+            <option value="gl">GL Model</option>
+        </select><br><br>
+        <label for="input_value">Enter input value (comma-separated):</label>
+        <input type="text" name="input_value" id="input_value" required><br><br>
+        <button type="submit" id="predict-button">Predict</button>
+    </form>
+
+    <div id="results">
+        <!-- Results will be displayed here -->
+    </div>
+
+    <script>
+        document.getElementById("prediction-form").addEventListener("submit", function(event) {
+            event.preventDefault(); // Prevent default form submission
+
+            var formData = new FormData(this); // Create FormData object from form
+            var xhr = new XMLHttpRequest(); // Create XMLHttpRequest object
+
+            xhr.open("POST", "/predict", true); // Open a POST request to /predict
+
+            xhr.onloadstart = function () { 
+                document.getElementById("results").innerHTML = "Loading...";
+            };
+            xhr.onload = function () {
+
+                if (xhr.status === 200) {
+                    // If request is successful, insert response into results div
+                    document.getElementById("results").innerHTML = xhr.responseText;
+                } else {
+                    // If there's an error, display it
+                    document.getElementById("results").innerHTML = "Error: " + xhr.responseText;
+                }
+            };
+            xhr.send(formData); // Send the form data
+        });
+    </script>
+</body>
+</html>
